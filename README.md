@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ritmo
 
-## Getting Started
+A personal planning app that helps users organize their week
+based on the time they actually have available.
 
-First, run the development server:
+## Problem
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Balancing work, personal projects, and everyday responsibilities
+can make weekly planning difficult. A task list alone does not
+show whether everything fits into the available time.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Solution
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Ritmo connects tasks, priorities, and time estimates in a weekly
+view, helping users build a realistic plan.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## MVP Features
 
-## Learn More
+- Create, edit, delete, and complete tasks.
+- Assign tasks to a specific date.
+- Set task priority: low, medium, or high.
+- Estimate task duration in minutes.
+- Define available time for each day.
+- View tasks for the current week.
+- Compare planned task duration with daily availability.
+- Highlight days that exceed the available time.
 
-To learn more about Next.js, take a look at the following resources:
+## Main User Flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Set the available time for each day.
+2. Create a task with a priority and estimated duration.
+3. Assign the task to a date.
+4. Review the weekly plan.
+5. Adjust overloaded days.
+6. Mark completed tasks.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Future Improvements
 
-## Deploy on Vercel
+- Monthly goals.
+- Project management.
+- Authentication and cloud synchronization.
+- Calendar integrations.
+- Weekly progress reports.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Planned Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Supabase / PostgreSQL for a later cloud persistence phase
+
+## Initial Data Storage
+
+The MVP will store data locally in the browser using localStorage.
+Authentication and cloud persistence will be added later.
+
+## Project Status
+
+Planning and initial development.
