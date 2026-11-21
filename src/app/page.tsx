@@ -1,3 +1,5 @@
+import TaskPlanner from "@/components/task-planner";
+
 export default function Home() {
   return (
     <main>
@@ -9,18 +11,7 @@ export default function Home() {
         Focus on what matters today.
       </p>
 
-      <section
-        aria-labelledby="tasks-heading"
-        className="mt-8 rounded-2xl border border-slate-200 bg-white p-6"
-      >
-        <h2 id="tasks-heading" className="text-lg font-semibold">
-          Your tasks
-        </h2>
-
-        <p className="mt-2 text-slate-500">
-          No tasks planned for today.
-        </p>
-      </section>
+      <TaskPlanner />
     </main>
   );
 }
