@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { readTasks } from "@/lib/task-storage";
+import type { Task } from "@/types/task";
+import { formatMinutes } from "@/lib/dates";
+
 import {
   addDays,
   formatShortDate,
@@ -33,11 +38,23 @@ export function WeekRange() {
 export default function WeekBoard() {
   const today = useToday();
   const monday = today ? startOfWeek(parseISODate(today)) : null;
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Load browser storage after mounting.
+    setTasks(readTasks());
+  }, []);
 
   return (
     <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-7">
       {weekdays.map((day, index) => {
         const date = monday ? addDays(monday, index) : null;
+        const dateKey = date ? toISODate(date) : null;
+        const dayTasks = tasks.filter((task) => task.date === dateKey);
+        const plannedMinutes = dayTasks.reduce(
+          (total, task) => total + task.estimatedMinutes,
+          0,
+        );
         const isToday = date !== null && toISODate(date) === today;
         const isWeekend = index >= 5;
 
@@ -75,9 +92,17 @@ export default function WeekBoard() {
               ) : null}
             </p>
 
-            <p className="mt-6 flex-1 text-sm text-muted">
-              No tasks planned.
-            </p>
+            {dayTasks.length === 0 ? (
+            <p className="mt-6 flex-1 text-sm text-muted">No tasks planned.</p>
+            ) : (
+              <ul className="mt-6 flex-1 space-y-2 text-sm">
+                {dayTasks.map((task) => (
+                  <li key={task.id} className="break-words">
+                    {task.title} · {formatMinutes(task.estimatedMinutes)}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             <div className="mt-4">
               <div
@@ -86,7 +111,7 @@ export default function WeekBoard() {
                   isToday ? "bg-accent/20" : "bg-surface-2"
                 }`}
               />
-              <p className="mt-2 text-xs text-muted">0 min planned</p>
+              <p className="mt-2 text-xs text-muted">{formatMinutes(plannedMinutes)} planned</p>
             </div>
           </section>
         );

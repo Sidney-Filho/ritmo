@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import RhythmStrip from "@/components/rhythm-strip";
 import TaskForm from "@/components/task-form";
 import { formatMinutes, formatShortDate, parseISODate } from "@/lib/dates";
 import { priorityMeta } from "@/lib/priority";
 import type { Task, TaskInput } from "@/types/task";
+import { useEffect, useState } from "react";
+import { readTasks, writeTasks } from "@/lib/task-storage";
 
 export default function TaskPlanner() {
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Load browser storage after mounting.
+  setTasks(readTasks());
+  }, []);
 
   function handleAddTask(taskInput: TaskInput) {
     const newTask: Task = {
@@ -17,7 +23,9 @@ export default function TaskPlanner() {
       completed: false,
     };
 
-    setTasks((currentTasks) => [...currentTasks, newTask]);
+    const nextTasks = [...tasks, newTask];
+    writeTasks(nextTasks);
+    setTasks(nextTasks);
   }
 
   return (
