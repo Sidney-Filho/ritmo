@@ -81,7 +81,7 @@ export default function WeekBoard() {
               </h2>
               {isToday ? (
                 <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-ink">
-                  Today
+                  Todays tasks
                 </span>
               ) : null}
             </div>
@@ -93,7 +93,7 @@ export default function WeekBoard() {
             </p>
 
             {dayTasks.length === 0 ? (
-            <p className="mt-6 flex-1 text-sm text-muted">No tasks planned.</p>
+              <p className="mt-6 flex-1 text-sm text-muted">No tasks planned for this day.</p>
             ) : (
               <ul className="mt-6 flex-1 space-y-2 text-sm">
                 {dayTasks.map((task) => (
