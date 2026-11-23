@@ -1,97 +1,82 @@
 import { formatMinutes } from "@/lib/dates";
-import { priorityMeta, priorityOrder } from "@/lib/priority";
 import type { Task } from "@/types/task";
 
 type RhythmStripProps = {
   tasks: Task[];
 };
 
+function sumMinutes(tasks: Task[]) {
+  return tasks.reduce((sum, task) => sum + task.estimatedMinutes, 0);
+}
+
 export default function RhythmStrip({ tasks }: RhythmStripProps) {
-  const totalMinutes = tasks.reduce(
-    (sum, task) => sum + task.estimatedMinutes,
-    0,
-  );
-
-  const minutesByPriority = priorityOrder.map((priority) => ({
-    priority,
-    minutes: tasks
-      .filter((task) => task.priority === priority)
-      .reduce((sum, task) => sum + task.estimatedMinutes, 0),
-  }));
-
-  const remainingMinutes = tasks
-  .filter((task) => !task.completed)
-  .reduce((sum, task) => sum + task.estimatedMinutes, 0);
+  const plannedMinutes = sumMinutes(tasks);
+  const remainingMinutes = sumMinutes(tasks.filter((task) => !task.completed));
+  const doneCount = tasks.filter((task) => task.completed).length;
 
   return (
     <section
-      aria-labelledby="rhythm-heading"
-      className="mt-10 rounded-[2rem] bg-hero p-6 text-hero-ink sm:p-8"
+      aria-label="Time summary for today"
+      className="mt-6 rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6"
     >
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+      <dl className="grid grid-cols-2 gap-4">
         <div>
-          <h2
-            id="rhythm-heading"
-            className="text-sm font-medium text-hero-muted"
+          <dt className="text-sm font-medium text-muted">Planned time</dt>
+          <dd className="mt-1 font-display text-xl font-bold whitespace-nowrap tabular-nums sm:text-3xl">
+            {formatMinutes(plannedMinutes)}
+          </dd>
+        </div>
+
+        <div>
+          <dt className="text-sm font-medium text-muted">Remaining time</dt>
+          <dd className="mt-1 font-display text-xl font-bold whitespace-nowrap tabular-nums sm:text-3xl">
+            {formatMinutes(remainingMinutes)}
+          </dd>
+        </div>
+      </dl>
+
+      <ul
+        aria-label="Tasks sized by estimated duration"
+        className="mt-5 flex h-2.5 gap-0.5 overflow-hidden rounded-full bg-surface-2"
+      >
+        {tasks.map((task) => (
+          <li
+            key={task.id}
+            title={`${task.title} · ${formatMinutes(task.estimatedMinutes)} · ${
+              task.completed ? "Done" : "Remaining"
+            }`}
+            style={{ flexGrow: task.estimatedMinutes, flexBasis: 0 }}
+            className={`min-w-1 transition-[flex-grow,background-color] duration-200 ease-out ${
+              task.completed ? "bg-line-strong" : "bg-accent"
+            }`}
           >
-            Planned time
-          </h2>
-          <p className="mt-1 font-display text-5xl font-bold tracking-tight sm:text-6xl">
-            {formatMinutes(totalMinutes)}
-          </p>
-          <p className="mt-2 text-sm text-hero-muted">
-            Remaining time: {formatMinutes(remainingMinutes)}
-          </p>
-        </div>
-
-        <p className="pb-1.5 text-base text-hero-muted">
-          {tasks.length === 0
-            ? "No tasks yet"
-            : `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`}
-        </p>
-      </div>
-
-      {tasks.length === 0 ? (
-        <div className="mt-6 flex h-16 items-center justify-center rounded-2xl border border-dashed border-hero-line px-4 text-center text-sm text-hero-muted">
-          Add a task and your day will take shape here.
-        </div>
-      ) : (
-        <ul
-          aria-label="Tasks sized by estimated duration"
-          className="mt-6 flex h-16 gap-1"
-        >
-          {tasks.map((task) => (
-            <li
-              key={task.id}
-              title={`${task.title} · ${formatMinutes(task.estimatedMinutes)}`}
-              style={{ flexGrow: task.estimatedMinutes, flexBasis: 0 }}
-              className={`min-w-2 rounded-lg ${priorityMeta[task.priority].bar}`}
-            >
-              <span className="sr-only">
-                {task.title}, {formatMinutes(task.estimatedMinutes)},{" "}
-                {priorityMeta[task.priority].label} priority
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-hero-muted">
-        {minutesByPriority.map(({ priority, minutes }) => (
-          <li key={priority} className="flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className={`size-2.5 rounded-full ${priorityMeta[priority].bar}`}
-            />
-            <span>
-              {priorityMeta[priority].label}{" "}
-              <span className="font-medium text-hero-ink">
-                {formatMinutes(minutes)}
-              </span>
+            <span className="sr-only">
+              {task.title}, {formatMinutes(task.estimatedMinutes)},{" "}
+              {task.completed ? "done" : "remaining"}
             </span>
           </li>
         ))}
       </ul>
+
+      {tasks.length > 0 ? (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm text-muted">
+          <p>
+            {doneCount} of {tasks.length}{" "}
+            {tasks.length === 1 ? "task" : "tasks"} done
+          </p>
+
+          <p className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5">
+              <span aria-hidden="true" className="size-2.5 rounded-full bg-accent" />
+              Remaining
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span aria-hidden="true" className="size-2.5 rounded-full bg-line-strong" />
+              Done
+            </span>
+          </p>
+        </div>
+      ) : null}
     </section>
   );
 }

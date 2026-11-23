@@ -14,7 +14,7 @@ type Feedback = {
 };
 
 const inputClassName =
-  "w-full rounded-xl border border-line bg-surface-2 px-3.5 py-2.5 text-ink placeholder:text-muted/70 transition-colors hover:border-line-strong focus-visible:border-accent";
+  "h-11 w-full rounded-lg border border-control bg-surface px-3 text-base text-ink placeholder:text-muted transition-colors duration-150 hover:border-muted focus-visible:border-ring";
 
 const labelClassName = "block text-sm font-medium";
 
@@ -74,16 +74,16 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
   return (
     <section
       aria-labelledby="task-form-heading"
-      className="rounded-3xl border border-line bg-surface p-6 sm:p-7"
+      className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6"
     >
       <h2
         id="task-form-heading"
-        className="font-display text-2xl font-bold tracking-tight"
+        className="font-display text-lg font-semibold tracking-tight"
       >
         New task
       </h2>
 
-      <form onSubmit={handleSubmit} className="mt-6 grid gap-5">
+      <form onSubmit={handleSubmit} className="mt-5 grid gap-5">
         <div>
           <label htmlFor="task-title" className={labelClassName}>
             Title
@@ -117,13 +117,7 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
                       defaultChecked={priority === "medium"}
                       className="peer sr-only"
                     />
-                    <span
-                      className={`flex items-center justify-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:border-line-strong peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${meta.selected}`}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={`size-2 rounded-full ${meta.bar}`}
-                      />
+                    <span className="flex h-11 items-center justify-center rounded-lg border border-control bg-surface text-sm font-medium transition-colors duration-150 hover:bg-surface-2 peer-checked:border-ring peer-checked:bg-accent-soft peer-checked:font-semibold peer-checked:text-accent-soft-ink peer-checked:ring-1 peer-checked:ring-ring peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring">
                       {meta.label}
                     </span>
                   </label>
@@ -132,7 +126,7 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
           </div>
         </fieldset>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-4">
           <div>
             <label htmlFor="task-date" className={labelClassName}>
               Date
@@ -175,8 +169,20 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
         <div>
           <button
             type="submit"
-            className="w-full cursor-pointer rounded-xl bg-accent px-4 py-3 font-semibold text-accent-ink transition-[filter] hover:brightness-110 active:brightness-95"
+            className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent px-4 font-semibold text-accent-ink transition-colors duration-150 hover:bg-accent-hover"
           >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M10 4v12M4 10h12" />
+            </svg>
             Add task
           </button>
 
