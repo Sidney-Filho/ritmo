@@ -7,9 +7,12 @@ import { priorityMeta } from "@/lib/priority";
 import type { Task, TaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
 import { readTasks, writeTasks } from "@/lib/task-storage";
+import { useToday } from "@/lib/use-today";
 
 export default function TaskPlanner() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const today = useToday();
+  const todayTasks = tasks.filter((task) => task.date === today);
 
   useEffect(() => {
   // eslint-disable-next-line react-hooks/set-state-in-effect -- Load browser storage after mounting.
@@ -30,7 +33,7 @@ export default function TaskPlanner() {
 
   return (
     <>
-      <RhythmStrip tasks={tasks} />
+      <RhythmStrip tasks={todayTasks} />
 
       <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
         <TaskForm onAddTask={handleAddTask} />
@@ -41,25 +44,25 @@ export default function TaskPlanner() {
               id="tasks-heading"
               className="font-display text-2xl font-bold tracking-tight"
             >
-              Your tasks
+              Todays tasks
             </h2>
-            {tasks.length > 0 ? (
+            {todayTasks.length > 0 ? (
               <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-sm font-medium text-accent-soft-ink">
-                {tasks.length}
+                {todayTasks.length}
               </span>
             ) : null}
           </div>
 
-          {tasks.length === 0 ? (
+          {todayTasks.length === 0 ? (
             <div className="mt-5 rounded-3xl border border-dashed border-line-strong px-6 py-12 text-center">
-              <p className="font-medium">No tasks yet</p>
+              <p className="font-medium">No tasks planned for Today.</p>
               <p className="mx-auto mt-1 max-w-xs text-sm text-muted">
                 Add your first task to start shaping the day.
               </p>
             </div>
           ) : (
             <ul className="mt-5 space-y-3">
-              {tasks.map((task) => {
+              {todayTasks.map((task) => {
                 const meta = priorityMeta[task.priority];
 
                 return (
