@@ -2,78 +2,77 @@
 
 /*
   Ritmo design tokens.
-  Light is the default; dark follows the system preference.
-  Components use the semantic names (canvas, surface, ink, ...) so both
-  themes stay readable without per-component dark: overrides.
+  Roles, not colours: components use canvas / surface / ink / accent so the
+  light and dark themes only differ here. Light is the default; dark follows
+  the system preference.
+
+  Contrast (WCAG 2.2): text pairs are >= 4.5:1, control borders and the focus
+  ring are >= 3:1 against the surface they sit on, in both themes.
 */
 :root {
   color-scheme: light;
 
-  --canvas: #f3f4f9;
+  --canvas: #f5f7fa;
   --surface: #ffffff;
-  --surface-2: #eceef6;
-  --ink: #12152b;
-  --muted: #565c76;
-  --line: #e0e3ee;
-  --line-strong: #c9cee0;
+  --surface-2: #eef2f7;
+  --ink: #172b4d;
+  --muted: #526684;
+  --line: #dce3ed;
+  --line-strong: #b9c5d6;
+  --control: #7d8faa;
 
-  --accent: #3b37e8;
+  --accent: #1d4ed8;
+  --accent-hover: #1e40af;
   --accent-ink: #ffffff;
-  --accent-soft: #e8e7ff;
-  --accent-soft-ink: #2a27b8;
+  --accent-soft: #e6eefe;
+  --accent-soft-ink: #1e3a9a;
+  --ring: #1d4ed8;
 
-  /* Hero panel (the rhythm strip) keeps a deep indigo in both themes. */
-  --hero: #14173a;
-  --hero-ink: #f3f4ff;
-  --hero-muted: #aab0dc;
-  --hero-line: #2b3068;
+  /* Priority colours are only used for small labelled tags. */
+  --p-high-soft: #fde8e8;
+  --p-high-ink: #9b1c1c;
+  --p-medium-soft: #fef3c7;
+  --p-medium-ink: #92400e;
+  --p-low-soft: #dcfce7;
+  --p-low-ink: #166534;
 
-  --p-high: #e5484d;
-  --p-high-soft: #ffe8ea;
-  --p-high-ink: #a91e2b;
-  --p-medium: #f0a020;
-  --p-medium-soft: #fff0d2;
-  --p-medium-ink: #7a4f00;
-  --p-low: #12a97a;
-  --p-low-soft: #daf4ea;
-  --p-low-ink: #0a6247;
+  --success-ink: #166534;
+  --danger-ink: #b42318;
 
-  --success-ink: #0a6247;
-  --danger-ink: #a91e2b;
+  --card-shadow: 0 1px 2px rgb(23 43 77 / 0.06), 0 1px 3px rgb(23 43 77 / 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
 
-    --canvas: #0c0e1b;
-    --surface: #141829;
-    --surface-2: #1b2036;
-    --ink: #edeffb;
-    --muted: #9ea4c2;
-    --line: #262c47;
-    --line-strong: #353c5e;
+    --canvas: #0e1624;
+    --surface: #162033;
+    --surface-2: #1d2a40;
+    --ink: #e7ecf5;
+    --muted: #a3b1c8;
+    --line: #26344d;
+    --line-strong: #3a4a68;
+    --control: #6a7c99;
 
-    --accent: #8e8bff;
-    --accent-ink: #0c0e1b;
-    --accent-soft: #25235a;
-    --accent-soft-ink: #c9c7ff;
+    --accent: #2f66e0;
+    --accent-hover: #2557c7;
+    --accent-ink: #ffffff;
+    --accent-soft: #1b2b52;
+    --accent-soft-ink: #bfd3ff;
+    --ring: #7fa9ff;
 
-    --hero: #1c2050;
-    --hero-line: #343a7a;
+    --p-high-soft: #3b1f24;
+    --p-high-ink: #fca5a5;
+    --p-medium-soft: #3a2d12;
+    --p-medium-ink: #fcd34d;
+    --p-low-soft: #17332a;
+    --p-low-ink: #86efac;
 
-    --p-high: #ff6369;
-    --p-high-soft: #3a1c25;
-    --p-high-ink: #ffb4b8;
-    --p-medium: #f5a524;
-    --p-medium-soft: #38290f;
-    --p-medium-ink: #ffd38a;
-    --p-low: #3dd6a5;
-    --p-low-soft: #12372d;
-    --p-low-ink: #8fe9cb;
+    --success-ink: #86efac;
+    --danger-ink: #fca5a5;
 
-    --success-ink: #8fe9cb;
-    --danger-ink: #ffb4b8;
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
   }
 }
 
@@ -85,29 +84,26 @@
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  --color-control: var(--control);
 
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
   --color-accent-soft-ink: var(--accent-soft-ink);
+  --color-ring: var(--ring);
 
-  --color-hero: var(--hero);
-  --color-hero-ink: var(--hero-ink);
-  --color-hero-muted: var(--hero-muted);
-  --color-hero-line: var(--hero-line);
-
-  --color-p-high: var(--p-high);
   --color-p-high-soft: var(--p-high-soft);
   --color-p-high-ink: var(--p-high-ink);
-  --color-p-medium: var(--p-medium);
   --color-p-medium-soft: var(--p-medium-soft);
   --color-p-medium-ink: var(--p-medium-ink);
-  --color-p-low: var(--p-low);
   --color-p-low-soft: var(--p-low-soft);
   --color-p-low-ink: var(--p-low-ink);
 
   --color-success-ink: var(--success-ink);
   --color-danger-ink: var(--danger-ink);
+
+  --shadow-card: var(--card-shadow);
 
   --font-sans: var(--font-geist-sans);
   --font-display: var(--font-bricolage);
@@ -119,7 +115,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 

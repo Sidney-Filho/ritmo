@@ -2,7 +2,7 @@
 
 import RhythmStrip from "@/components/rhythm-strip";
 import TaskForm from "@/components/task-form";
-import { formatMinutes, formatShortDate, parseISODate } from "@/lib/dates";
+import { formatMinutes } from "@/lib/dates";
 import { priorityMeta } from "@/lib/priority";
 import type { Task, TaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
@@ -46,82 +46,91 @@ export default function TaskPlanner() {
     <>
       <RhythmStrip tasks={todayTasks} />
 
-      <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
-        <TaskForm onAddTask={handleAddTask} />
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
+        <div className="lg:sticky lg:top-10">
+          <TaskForm onAddTask={handleAddTask} />
+        </div>
 
         <section aria-labelledby="tasks-heading">
           <div className="flex items-center gap-3">
             <h2
               id="tasks-heading"
-              className="font-display text-2xl font-bold tracking-tight"
+              className="font-display text-lg font-semibold tracking-tight"
             >
-              Todays tasks
+              Today&apos;s tasks
             </h2>
             {todayTasks.length > 0 ? (
-              <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-sm font-medium text-accent-soft-ink">
+              <span className="rounded-md bg-surface-2 px-2 py-0.5 text-sm font-medium text-muted">
                 {todayTasks.length}
+                <span className="sr-only"> tasks</span>
               </span>
             ) : null}
           </div>
 
           {todayTasks.length === 0 ? (
-            <div className="mt-5 rounded-3xl border border-dashed border-line-strong px-6 py-12 text-center">
-              <p className="font-medium">No tasks planned for Today.</p>
-              <p className="mx-auto mt-1 max-w-xs text-sm text-muted">
-                Add your first task to start shaping the day.
-              </p>
+            <div className="mt-4 rounded-xl border border-dashed border-line-strong bg-surface px-6 py-10 text-center">
+              <p className="font-medium">Add a task to plan your day.</p>
             </div>
           ) : (
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-4 space-y-3">
               {todayTasks.map((task) => {
                 const meta = priorityMeta[task.priority];
 
                 return (
                   <li
                     key={task.id}
-                    className="flex gap-4 rounded-2xl border border-line bg-surface p-4 sm:p-5"
+                    className="rounded-xl border border-line bg-surface p-4 shadow-card"
                   >
-                    <span
-                      aria-hidden="true"
-                      className={`w-1.5 shrink-0 rounded-full ${meta.bar}`}
-                    />
+                    <div className="flex items-start gap-3">
+                      <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={task.completed}
+                          onChange={() => handleToggleTask(task.id)}
+                          className="mt-0.5 size-5 shrink-0 cursor-pointer accent-accent"
+                        />
 
-                    <div className="min-w-0 flex-1">
-                      <label className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        checked={task.completed}
-                        onChange={() => handleToggleTask(task.id)}
-                        className="mt-1 size-4 shrink-0 accent-accent cursor-pointer rounded border-line-strong text-accent focus:ring-accent"
-                      />
-
-                      <span
-                        className={`min-w-0 break-words text-lg font-medium leading-snug ${
-                          task.completed ? "text-muted line-through" : ""
-                        }`}
-                      >
-                        {task.title}
-                      </span>
-                    </label>
-
-                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-medium">
                         <span
-                          className={`rounded-full px-2.5 py-1 ${meta.chip}`}
+                          className={`min-w-0 break-words text-base font-medium leading-snug transition-colors duration-150 ${
+                            task.completed ? "text-muted line-through" : ""
+                          }`}
                         >
-                          {meta.label} priority
+                          {task.title}
                         </span>
-                        <time
-                          dateTime={task.date}
-                          className="rounded-full bg-surface-2 px-2.5 py-1 text-muted"
-                        >
-                          {formatShortDate(parseISODate(task.date))}
-                        </time>
-                      </div>
+                      </label>
+
+                      <p className="shrink-0 whitespace-nowrap text-base font-semibold tabular-nums">
+                        {formatMinutes(task.estimatedMinutes)}
+                      </p>
                     </div>
 
-                    <p className="shrink-0 self-start font-display text-xl font-bold tracking-tight">
-                      {formatMinutes(task.estimatedMinutes)}
-                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-2 pl-8">
+                      <span
+                        className={`rounded-md px-2 py-0.5 text-xs font-semibold ${meta.chip}`}
+                      >
+                        {meta.label}
+                        <span className="sr-only"> priority</span>
+                      </span>
+
+                      {task.completed ? (
+                        <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-2 py-0.5 text-xs font-semibold text-muted">
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="m2.5 6.25 2.25 2.25 4.75-5" />
+                          </svg>
+                          Done
+                        </span>
+                      ) : null}
+                    </div>
                   </li>
                 );
               })}
