@@ -19,6 +19,10 @@ export default function RhythmStrip({ tasks }: RhythmStripProps) {
       .reduce((sum, task) => sum + task.estimatedMinutes, 0),
   }));
 
+  const remainingMinutes = tasks
+  .filter((task) => !task.completed)
+  .reduce((sum, task) => sum + task.estimatedMinutes, 0);
+
   return (
     <section
       aria-labelledby="rhythm-heading"
@@ -34,6 +38,9 @@ export default function RhythmStrip({ tasks }: RhythmStripProps) {
           </h2>
           <p className="mt-1 font-display text-5xl font-bold tracking-tight sm:text-6xl">
             {formatMinutes(totalMinutes)}
+          </p>
+          <p className="mt-2 text-sm text-hero-muted">
+            Remaining time: {formatMinutes(remainingMinutes)}
           </p>
         </div>
 

@@ -31,6 +31,17 @@ export default function TaskPlanner() {
     setTasks(nextTasks);
   }
 
+  function handleToggleTask(taskId: string) {
+    const nextTasks = tasks.map((task) =>
+    task.id === taskId
+      ? { ...task, completed: !task.completed }
+      : task,
+    );
+
+    writeTasks(nextTasks);
+    setTasks(nextTasks);
+  }
+
   return (
     <>
       <RhythmStrip tasks={todayTasks} />
@@ -76,9 +87,22 @@ export default function TaskPlanner() {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="break-words text-lg font-medium leading-snug">
+                      <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() => handleToggleTask(task.id)}
+                        className="mt-1 size-4 shrink-0 accent-accent cursor-pointer rounded border-line-strong text-accent focus:ring-accent"
+                      />
+
+                      <span
+                        className={`min-w-0 break-words text-lg font-medium leading-snug ${
+                          task.completed ? "text-muted line-through" : ""
+                        }`}
+                      >
                         {task.title}
-                      </h3>
+                      </span>
+                    </label>
 
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-medium">
                         <span
