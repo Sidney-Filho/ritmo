@@ -7,9 +7,12 @@ import { priorityMeta } from "@/lib/priority";
 import type { Task, TaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
 import { readTasks, writeTasks } from "@/lib/task-storage";
+import { useToday } from "@/lib/use-today";
 
 export default function TaskPlanner() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const today = useToday();
+  const todayTasks = tasks.filter((task) => task.date === today);
 
   useEffect(() => {
   // eslint-disable-next-line react-hooks/set-state-in-effect -- Load browser storage after mounting.
@@ -28,9 +31,20 @@ export default function TaskPlanner() {
     setTasks(nextTasks);
   }
 
+  function handleToggleTask(taskId: string) {
+    const nextTasks = tasks.map((task) =>
+    task.id === taskId
+      ? { ...task, completed: !task.completed }
+      : task,
+    );
+
+    writeTasks(nextTasks);
+    setTasks(nextTasks);
+  }
+
   return (
     <>
-      <RhythmStrip tasks={tasks} />
+      <RhythmStrip tasks={todayTasks} />
 
       <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
         <TaskForm onAddTask={handleAddTask} />
@@ -43,14 +57,14 @@ export default function TaskPlanner() {
             >
               Your tasks
             </h2>
-            {tasks.length > 0 ? (
+            {todayTasks.length > 0 ? (
               <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-sm font-medium text-accent-soft-ink">
-                {tasks.length}
+                {todayTasks.length}
               </span>
             ) : null}
           </div>
 
-          {tasks.length === 0 ? (
+          {todayTasks.length === 0 ? (
             <div className="mt-5 rounded-3xl border border-dashed border-line-strong px-6 py-12 text-center">
               <p className="font-medium">No tasks yet</p>
               <p className="mx-auto mt-1 max-w-xs text-sm text-muted">
@@ -59,7 +73,7 @@ export default function TaskPlanner() {
             </div>
           ) : (
             <ul className="mt-5 space-y-3">
-              {tasks.map((task) => {
+              {todayTasks.map((task) => {
                 const meta = priorityMeta[task.priority];
 
                 return (
@@ -73,9 +87,22 @@ export default function TaskPlanner() {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="break-words text-lg font-medium leading-snug">
+                      <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() => handleToggleTask(task.id)}
+                        className="mt-1 size-4 shrink-0 accent-accent cursor-pointer rounded border-line-strong text-accent focus:ring-accent"
+                      />
+
+                      <span
+                        className={`min-w-0 break-words text-lg font-medium leading-snug ${
+                          task.completed ? "text-muted line-through" : ""
+                        }`}
+                      >
                         {task.title}
-                      </h3>
+                      </span>
+                    </label>
 
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-medium">
                         <span
