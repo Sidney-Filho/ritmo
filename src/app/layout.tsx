@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import AppHeader from "@/components/app-header";
+import AppSidebar from "@/components/app-sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +25,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${bricolage.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-canvas font-sans text-ink">
-        <AppHeader />
-        <div className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
-          {children}
+        <div className="flex min-h-dvh flex-col md:flex-row">
+          <AppSidebar />
+
+          <div className="min-w-0 flex-1">
+            <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+              {children}
+            </div>
+          </div>
         </div>
       </body>
     </html>
