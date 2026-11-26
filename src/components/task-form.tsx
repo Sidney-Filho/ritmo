@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { priorityMeta, priorityOrder } from "@/lib/priority";
+import { MAX_TASK_MINUTES, MIN_TASK_MINUTES } from "@/lib/task-limits";
 import type { TaskInput } from "@/types/task";
 
 type TaskFormProps = {
@@ -49,12 +50,12 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
 
     if (
       !Number.isInteger(estimatedMinutes) ||
-      estimatedMinutes < 1 ||
-      estimatedMinutes > 1440
+      estimatedMinutes < MIN_TASK_MINUTES ||
+      estimatedMinutes > MAX_TASK_MINUTES
     ) {
       setFeedback({
         tone: "error",
-        text: "Enter a duration between 1 and 1440 whole minutes.",
+        text: `Enter a duration between ${MIN_TASK_MINUTES} and ${MAX_TASK_MINUTES} whole minutes.`,
       });
       return;
     }
@@ -149,8 +150,8 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
                 id="task-duration"
                 name="estimatedMinutes"
                 type="number"
-                min={1}
-                max={1440}
+                min={MIN_TASK_MINUTES}
+                max={MAX_TASK_MINUTES}
                 step={1}
                 defaultValue={30}
                 required
