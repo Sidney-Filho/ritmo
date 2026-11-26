@@ -6,11 +6,13 @@ import { formatMinutes } from "@/lib/dates";
 import { priorityMeta } from "@/lib/priority";
 import type { Task, TaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
+import { createId } from "@/lib/id";
 import { readTasks, writeTasks } from "@/lib/task-storage";
 import { useToday } from "@/lib/use-today";
 
 export default function TaskPlanner() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [saveFailed, setSaveFailed] = useState(false);
   const today = useToday();
   const todayTasks = tasks.filter((task) => task.date === today);
 
@@ -19,16 +21,20 @@ export default function TaskPlanner() {
   setTasks(readTasks());
   }, []);
 
+  /** Keeps the task in memory even if the browser refuses to store it, and says so. */
+  function commitTasks(nextTasks: Task[]) {
+    setSaveFailed(!writeTasks(nextTasks));
+    setTasks(nextTasks);
+  }
+
   function handleAddTask(taskInput: TaskInput) {
     const newTask: Task = {
       ...taskInput,
-      id: crypto.randomUUID(),
+      id: createId(),
       completed: false,
     };
 
-    const nextTasks = [...tasks, newTask];
-    writeTasks(nextTasks);
-    setTasks(nextTasks);
+    commitTasks([...tasks, newTask]);
   }
 
   function handleToggleTask(taskId: string) {
@@ -38,12 +44,21 @@ export default function TaskPlanner() {
       : task,
     );
 
-    writeTasks(nextTasks);
-    setTasks(nextTasks);
+    commitTasks(nextTasks);
   }
 
   return (
     <>
+      {saveFailed ? (
+        <p
+          role="alert"
+          className="mt-6 rounded-xl border border-danger-ink bg-surface px-4 py-3 text-sm font-medium text-danger-ink"
+        >
+          Your tasks could not be saved in this browser. They will be lost when
+          you close or reload this page.
+        </p>
+      ) : null}
+
       <RhythmStrip tasks={todayTasks} />
 
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
