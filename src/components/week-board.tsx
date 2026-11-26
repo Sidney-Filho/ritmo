@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { readTasks } from "@/lib/task-storage";
 import type { Task } from "@/types/task";
@@ -57,7 +56,6 @@ export default function WeekBoard() {
           0,
         );
         const isToday = dateKey !== null && dateKey === today;
-        const isPast = dateKey !== null && dateKey < today;
 
         return (
           <section
